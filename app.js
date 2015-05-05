@@ -431,7 +431,7 @@ var generateCsv = function() {
                 }
 
                 nndss.data.forEach(function (row) {
-                    wstream.write('\"' + row.join('\",\"') + '\"\n');
+                    wstream.write(row.join(',') + '\n');
                 });
             });
             wstream.end();
