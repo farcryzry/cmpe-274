@@ -4,8 +4,9 @@
 
 var express = require('express');
 var watson = require('watson-developer-cloud');
+var sqlite3 = require('sqlite3').verbose(); //http://codeforgeek.com/2014/07/node-sqlite-tutorial/
+
 var router = express.Router();
-var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./nndss.db');
 var question_and_answer_healthcare = watson.question_and_answer({
     username: '5ad1961d-0518-45e6-96ef-f93c22592cac',
@@ -30,10 +31,23 @@ router.get('/watson/:q*?', function (req, res) {
     });
 });
 
-//http://codeforgeek.com/2014/07/node-sqlite-tutorial/
 router.get('/db', function (req, res) {
     db.all("SELECT * from nndss limit 1000",function(err, rows){
         res.json(rows);
+    });
+});
+
+router.get('/areas', function (req, res) {
+    db.all("select distinct area, latitude, longitude from nndss where latitude != '' group by area order by area, latitude, longitude desc;",function(err, rows) {
+        res.json(rows);
+    });
+});
+
+router.get('/diseases', function (req, res) {
+    db.all("SELECT distinct disease from nndss order by disease",function(err, rows){
+        res.json(rows.map(function(row){
+            return row.Disease;
+        }));
     });
 });
 
