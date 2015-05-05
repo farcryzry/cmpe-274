@@ -33,22 +33,36 @@ router.get('/watson/:q*?', function (req, res) {
 
 router.get('/db', function (req, res) {
     db.all("SELECT * from nndss limit 1000",function(err, rows){
-        res.json(rows);
+        if(err) console.log(err);
+        else res.json(rows);
     });
 });
 
 router.get('/areas', function (req, res) {
     db.all("select distinct area, latitude, longitude from nndss where latitude != '' group by area order by area, latitude, longitude desc;",function(err, rows) {
-        res.json(rows);
+        if(err) console.log(err);
+        else res.json(rows);
     });
 });
 
 router.get('/diseases', function (req, res) {
     db.all("SELECT distinct disease from nndss order by disease",function(err, rows){
-        res.json(rows.map(function(row){
+        if(err) console.log(err);
+        else res.json(rows.map(function(row){
             return row.Disease;
         }));
     });
+});
+
+router.get('/count/:disease/:area*?', function (req, res) {
+    var disease = req.param('disease') || '';
+    var area = req.param('area') || '';
+    db.all("select year, week, count from nndss where area = ? and disease = ? group by year, week order by year, week;",
+        [area, disease],
+        function(err, rows){
+            if(err) console.log(err);
+            else res.json({Area: area, Disease: disease, Data: rows});
+        });
 });
 
 module.exports = router;
