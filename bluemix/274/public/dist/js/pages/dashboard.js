@@ -8,6 +8,29 @@
 
 $(function () {
 
+    $.get('api/areas', function(result) {
+        console.log(result);
+
+        $('#stat-area').text(result.length);
+
+        result.forEach(function(area){
+            var option = '<option value="'+ area.Area +'">' + area.Area + '</option>';
+            $('#areas').append(option);
+        });
+    });
+
+    $.get('api/diseases', function(result) {
+        console.log(result);
+
+        $('#stat-disease').text(result.length);
+
+        result.forEach(function(disease){
+            var option = '<option value="'+ disease +'">' + disease + '</option>';
+            $('#diseases').append(option);
+        });
+    });
+
+
     //Activate the iCheck Plugin
     $('input[type="checkbox"]').iCheck({
         checkboxClass: 'icheckbox_flat-blue',
@@ -36,18 +59,14 @@ $(function () {
     $('.daterange').daterangepicker(
         {
             ranges: {
-                'Today': [moment(), moment()],
-                'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
-                'Last 7 Days': [moment().subtract('days', 6), moment()],
-                'Last 30 Days': [moment().subtract('days', 29), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+                'This Year': [moment().startOf('year'), moment().endOf('year')],
+                'Last Year(2014)': [moment('20140101', 'YYYYMMDD'), moment('20140101', 'YYYYMMDD').endOf('year')]
             },
-            startDate: moment().subtract('days', 29),
+            startDate: moment('20140101', 'YYYYMMDD'),
             endDate: moment()
         },
         function (start, end) {
-            alert("You chose: " + start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            alert("You chose: " + start.format('MMMM D, YYYY - WW ') + ' - ' + end.format('MMMM D, YYYY - WW'));
         });
 
     /* jQueryKnob */
@@ -69,7 +88,7 @@ $(function () {
     };
     //World map by jvectormap
     $('#world-map').vectorMap({
-        map: 'world_mill_en',
+        map: 'us_mill_en',
         backgroundColor: "transparent",
         regionStyle: {
             initial: {
@@ -149,35 +168,6 @@ $(function () {
         labels: ['Item 1', 'Item 2'],
         lineColors: ['#a0d0e0', '#3c8dbc'],
         hideHover: 'auto'
-    });
-    var line = new Morris.Line({
-        element: 'line-chart',
-        resize: true,
-        data: [
-            {y: '2011 Q1', item1: 2666},
-            {y: '2011 Q2', item1: 2778},
-            {y: '2011 Q3', item1: 4912},
-            {y: '2011 Q4', item1: 3767},
-            {y: '2012 Q1', item1: 6810},
-            {y: '2012 Q2', item1: 5670},
-            {y: '2012 Q3', item1: 4820},
-            {y: '2012 Q4', item1: 15073},
-            {y: '2013 Q1', item1: 10687},
-            {y: '2013 Q2', item1: 8432}
-        ],
-        xkey: 'y',
-        ykeys: ['item1'],
-        labels: ['Item 1'],
-        lineColors: ['#efefef'],
-        lineWidth: 2,
-        hideHover: 'auto',
-        gridTextColor: "#fff",
-        gridStrokeWidth: 0.4,
-        pointSize: 4,
-        pointStrokeColors: ["#efefef"],
-        gridLineColor: "#efefef",
-        gridTextFamily: "Open Sans",
-        gridTextSize: 10
     });
 
     //Donut Chart
@@ -271,6 +261,46 @@ $(function () {
                 });
             });
         }
+    });
+
+    var areaDiseaseLine = new Morris.Line({
+        element: 'disease-area-chart',
+        resize: true,
+        data: [],
+        xkey: 'y',
+        ykeys: ['number'],
+        labels: ['Number'],
+        lineColors: ['#efefef'],
+        lineWidth: 2,
+        hideHover: 'auto',
+        gridTextColor: "#fff",
+        gridStrokeWidth: 0.4,
+        pointSize: 4,
+        pointStrokeColors: ["#efefef"],
+        gridLineColor: "#efefef",
+        gridTextFamily: "Open Sans",
+        gridTextSize: 10
+    });
+
+    $("#btn-predict").click(function() {
+        var area = $('#areas').val();
+        var disease = $('#diseases').val();
+
+        if(!area || !disease) {
+            alert('Please select State and Disease first!');
+            return;
+        }
+
+        $('#disease-chart').show('slow', function() {
+            $.get('/api/count/'+disease+'/'+area, function(result){
+                console.log(result);
+                if(result && result.Data) {
+                    areaDiseaseLine.setData(result.Data.map(function(item){
+                        return {y: item.Year+' W'+item.Week, number: item.Count}
+                    }));
+                }
+            });
+        });
     });
 
 });

@@ -54,6 +54,26 @@ router.get('/diseases', function (req, res) {
     });
 });
 
+router.get('/count/area/:area*?', function (req, res) {
+    var area = req.param('area') || '';
+    db.all("select disease, year, week, count from nndss where area = ? group by disease, year, week order by disease, year, week;",
+        [area],
+        function(err, rows){
+            if(err) console.log(err);
+            else res.json({Area: area, Data: rows});
+        });
+});
+
+router.get('/count/disease/:disease*?', function (req, res) {
+    var disease = req.param('disease') || '';
+    db.all("select area, year, week, count from nndss where disease = ? group by area, year, week order by area, year, week;",
+        [disease],
+        function(err, rows){
+            if(err) console.log(err);
+            else res.json({Disease: disease, Data: rows});
+        });
+});
+
 router.get('/count/:disease/:area*?', function (req, res) {
     var disease = req.param('disease') || '';
     var area = req.param('area') || '';
@@ -64,5 +84,7 @@ router.get('/count/:disease/:area*?', function (req, res) {
             else res.json({Area: area, Disease: disease, Data: rows});
         });
 });
+
+
 
 module.exports = router;
