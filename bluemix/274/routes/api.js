@@ -56,11 +56,17 @@ router.get('/diseases', function (req, res) {
 
 router.get('/count/area/:area*?', function (req, res) {
     var area = req.param('area') || '';
-    db.all("select disease, year, week, count from nndss where area = ? group by disease, year, week order by disease, year, week;",
+    db.all("select year, week, disease, count from nndss where area = ? group by year, week, disease order by year, week;",
         [area],
         function(err, rows){
             if(err) console.log(err);
-            else res.json({Area: area, Data: rows});
+            else {
+                var map = [];
+                rows.forEach(function (row) {
+
+                });
+                res.json({Area: area, Data: rows});
+            }
         });
 });
 
