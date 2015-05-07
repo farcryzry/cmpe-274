@@ -165,27 +165,38 @@
                                 <div class="box-body border-radius-none">
                                     <div class="chart" id="disease-area-chart" style="height: 250px;"></div>
                                 </div><!-- /.box-body -->
-                                <div class="box-footer no-border">
+                                <div class="box-footer no-border" style="padding: 0">
                                     <div class="row">
-                                        <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
-                                            <input type="text" class="knob" data-readonly="true" value="20" data-width="60" data-height="60" data-fgColor="#39CCCC"/>
-                                            <div class="knob-label">Mail-Orders</div>
-                                        </div><!-- ./col -->
-                                        <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
-                                            <input type="text" class="knob" data-readonly="true" value="50" data-width="60" data-height="60" data-fgColor="#39CCCC"/>
-                                            <div class="knob-label">Online</div>
-                                        </div><!-- ./col -->
-                                        <div class="col-xs-4 text-center">
-                                            <input type="text" class="knob" data-readonly="true" value="30" data-width="60" data-height="60" data-fgColor="#39CCCC"/>
-                                            <div class="knob-label">In-Store</div>
-                                        </div><!-- ./col -->
-                                    </div><!-- /.row -->
+                                        <div class="col-md-6 col-sm-6 col-xs-6" style="padding-right: 0">
+                                            <div class="info-box bg-yellow">
+                                                <span class="info-box-icon"><i class="fa fa-bullseye"></i></span>
+                                                <div class="info-box-content" id="predictionInfo1">
+                                                    <span class="info-box-text" style="font-size: 16px"></span>
+                                                    <span class="info-box-number" style="font-size: 38px">N/A</span>
+                                                </div><!-- /.info-box-content -->
+                                            </div>
+                                        </div><!-- /.col -->
+                                        <div class="col-md-6 col-sm-6 col-xs-6" style="padding-left: 0">
+                                            <div class="info-box bg-yellow">
+                                                <span class="info-box-icon"><i class="fa fa-bullseye"></i></span>
+                                                <div class="info-box-content" id="predictionInfo2">
+                                                    <span class="info-box-text" style="font-size: 16px"></span>
+                                                    <span class="info-box-number" style="font-size: 38px">N/A</span>
+                                                </div><!-- /.info-box-content -->
+                                            </div>
+                                        </div><!-- /.col -->
+                                    </div>
                                 </div><!-- /.box-footer -->
                             </div>
                         </div>
                         <div class="box-footer clearfix">
                             <button class="pull-right btn btn-primary" id="btn-predict">Predict <i class="fa fa-arrow-circle-right"></i></button>
                         </div>
+                        <!-- Loading (remove the following to stop the loading)-->
+                        <div class="overlay" style="display: none">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- end loading -->
                     </div>
                 </div>
             </div>

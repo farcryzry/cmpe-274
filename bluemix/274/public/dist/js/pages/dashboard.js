@@ -303,15 +303,16 @@ $(function () {
         resize: true,
         data: [],
         xkey: 'y',
-        ykeys: ['number'],
-        labels: ['Number'],
-        lineColors: ['#efefef'],
+        ykeys: ['historical', 'future'],
+        labels: ['Historical', 'Future'],
+        lineColors: ['#efefef', "#ff851b"],
         lineWidth: 2,
         hideHover: 'auto',
         gridTextColor: "#fff",
         gridStrokeWidth: 0.4,
         pointSize: 4,
-        pointStrokeColors: ["#efefef"],
+        pointFillColors: ["#efefef", "#ff851b"],
+        pointStrokeColors: ["#efefef", "#ff851b"],
         gridLineColor: "#efefef",
         gridTextFamily: "Open Sans",
         gridTextSize: 10
@@ -326,20 +327,75 @@ $(function () {
             return;
         }
 
-        $.get('http://127.0.0.1:5000/' + area + '/' + disease, function(result){
-            console.log(JSON.parse(result));
-            alert(result);
-        });
+        $('#prediction .overlay').show();
 
-        $('#disease-chart').show('slow', function() {
-            $.get('/api/count/'+disease+'/'+area, function(result){
-                console.log(result);
-                if(result && result.Data) {
-                    areaDiseaseLine.setData(result.Data.map(function(item){
-                        return {y: item.Year+' W'+item.Week, number: item.Count}
-                    }));
-                }
+        $.get('http://127.0.0.1:5000/' + area + '/' + disease, function(predictions) {
+            $('#prediction .overlay').hide();
+
+            $('#disease-chart').show('slow', function() {
+                $.get('/api/count/'+disease+'/'+area, function(result){
+                    console.log(result);
+                    if(result && result.Data) {
+
+
+                        var futures = JSON.parse(predictions) || [];
+                        console.log(futures);
+
+                        var maxPeriod = _.max(result.Data, function (item) {
+                            return item.Year * 100 + item.Week;
+                        });
+
+                        console.log(maxPeriod);
+
+                        var getNextPeriod = function (currentPeriod, count) {
+                            if (currentPeriod.Year == 2014 && currentPeriod.Week == 53) {
+                                return {Year: currentPeriod.Year + 1, Week: 1, Future: count};
+                            } else {
+                                return {Year: currentPeriod.Year, Week: currentPeriod.Week + 1, Future: count};
+                            }
+                        };
+
+                        if(futures[0]) {
+                            var nextPeriod = getNextPeriod(maxPeriod);
+                            $('#predictionInfo1 .info-box-text').text(nextPeriod.Year + ' Week ' + nextPeriod.Week);
+                            $('#predictionInfo1 .info-box-number').text(futures[0]);
+                        }
+
+                        futures.forEach(function (count) {
+                            var nextPeriod = getNextPeriod(maxPeriod, count);
+                            result.Data.push(nextPeriod);
+                            maxPeriod = nextPeriod;
+                        });
+
+                        if(futures[1]) {
+                            $('#predictionInfo2 .info-box-text').text(maxPeriod.Year + ' Week ' + maxPeriod.Week);
+                            $('#predictionInfo2 .info-box-number').text(futures[1]);
+                        }
+
+                        areaDiseaseLine.setData(result.Data.map(function (item) {
+                            var o = {y: item.Year + ' W' + item.Week};
+                            if (item.Count) {
+                                o.historical = item.Count;
+                            }
+                            if (item.Future) {
+                                o.future = item.Future;
+                            }
+                            return o;
+                        }));
+                    }
+                });
+
             });
+
+        }).fail(function() {
+            $('#disease-chart').hide();
+            areaDiseaseLine.setData([]);
+            $('#predictionInfo1 .info-box-text').text('');
+            $('#predictionInfo1 .info-box-number').text('N/A');
+            $('#predictionInfo2 .info-box-text').text('');
+            $('#predictionInfo2 .info-box-number').text('N/A');
+        }).always(function(){
+            $('#prediction .overlay').hide();
         });
     });
 
