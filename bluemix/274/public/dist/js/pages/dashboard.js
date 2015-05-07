@@ -9,24 +9,35 @@
 $(function () {
 
     $.get('api/areas', function(result) {
-        console.log(result);
+        //console.log(result);
 
         $('#stat-area').text(result.length);
 
         result.forEach(function(area){
             var option = '<option value="'+ area.Area +'">' + area.Area + '</option>';
             $('#areas').append(option);
+            $('#area1').append(option);
+            $('#area2').append(option);
         });
     });
 
     $.get('api/diseases', function(result) {
-        console.log(result);
+        //console.log(result);
 
         $('#stat-disease').text(result.length);
 
         result.forEach(function(disease){
             var option = '<option value="'+ disease +'">' + disease + '</option>';
             $('#diseases').append(option);
+            $('#disease').append(option);
+        });
+    });
+
+    $.get('api/groups', function(result) {
+        //console.log(result);
+        result.forEach(function(item){
+            var option = '<option value="'+ item.name +'">' + item.name + '</option>';
+            $('#disease_groups').append(option);
         });
     });
 
@@ -204,20 +215,6 @@ $(function () {
         });
     });
 
-    //Donut Chart
-    var donut = new Morris.Donut({
-        element: 'sales-chart',
-        resize: true,
-        colors: ["#3c8dbc", "#f56954", "#00a65a"],
-        data: [
-            {label: "Download Sales", value: 12},
-            {label: "In-Store Sales", value: 30},
-            {label: "Mail-Order Sales", value: 20}
-        ],
-        hideHover: 'auto',
-        gridTextColor: "#fff"
-
-    });
 
     //Fix for charts under tabs
     $('.box ul.nav a').on('shown.bs.tab', function (e) {
@@ -396,6 +393,144 @@ $(function () {
             $('#predictionInfo2 .info-box-number').text('N/A');
         }).always(function(){
             $('#prediction .overlay').hide();
+        });
+    });
+
+
+
+    $('#btn-view').click(function(e) {
+        e.preventDefault();
+        var disease = $('#disease').val();
+
+        if (!disease) {
+            alert('Please select Disease first!');
+            return;
+        }
+    });
+
+
+
+
+
+
+
+    //Donut Chart
+    var donut = new Morris.Donut({
+        element: 'group-donut-chart',
+        resize: true,
+        colors: ["#3c8dbc", "#f56954", "#00a65a"],
+        data: [],
+        //    [
+        //    {label: "Download Sales", value: 12},
+        //    {label: "In-Store Sales", value: 30},
+        //    {label: "Mail-Order Sales", value: 20}
+        //]
+        hideHover: 'auto',
+        gridTextColor: "#fff"
+
+    });
+
+    var group_disease_line = new Morris.Line({
+        element: 'group-disease-chart',
+        resize: true,
+        data: [],
+        xkey: 'y',
+        ykeys: [],
+        labels: [],
+        lineWidth: 2,
+        hideHover: 'auto',
+        gridTextColor: "#fff",
+        gridStrokeWidth: 0.4,
+        pointSize: 4,
+        pointStrokeColors: ["#efefef"],
+        gridLineColor: "#efefef",
+        gridTextFamily: "Open Sans",
+        gridTextSize: 10
+    });
+
+
+    $('#btn-view2').click(function(e) {
+        e.preventDefault();
+        var area = $('#area2').val();
+        var group = $('#disease_groups').val();
+
+        if (!area || !group) {
+            alert('Please select Area and Group first!');
+            return;
+        }
+
+        $('#group-donut-chart').show('slow', function() {
+            $.get('/api/group/'+group+'/'+area, function(result) {
+                console.log(result);
+                if (result && result.Data) {
+
+                    var donut = new Morris.Donut({
+                        element: 'group-donut-chart',
+                        resize: true,
+                        data: result.Data.map(function(item){return {label: item.Disease.replace(result.Group, ''), value: item.Count};}),
+                        hideHover: 'auto',
+                        gridTextColor: "#fff"
+
+                    });
+                    //donut.setData(result.Data.map(function(item){
+                    //    return {label: item.Disease, value: item.Count};
+                    //}));
+                }
+            });
+        });
+
+        $('#group-disease-chart').show('slow', function() {
+            $.get('api/count/area/' + area, function (result) {
+                var data = {};
+                var diseases = [];
+                var final = [];
+
+                result.Data.forEach(function (item) {
+                    if (diseases.indexOf(item.Disease) < 0) diseases.push(item.Disease);
+                    var key = item.Year + ' W' + item.Week;
+                    if (!data[key]) {
+                        data[key] = {};
+                    }
+                    data[key][item.Disease] = item.Count;
+                });
+
+                $.get('api/groups/'+group, function(group){
+                    diseases = _.filter(diseases, function(disease){
+                        return group.Data.indexOf(disease) >= 0;
+                    });
+                }).fail(function(){
+                    diseases = _.shuffle(diseases).slice(0, 5);
+                }).always(function(){
+                    Object.getOwnPropertyNames(data).forEach(function (week) {
+                        var item = {y: week};
+                        diseases.forEach(function (disease) {
+                            item[disease] = data[week][disease] || 0;
+                        });
+                        final.push(item);
+                    });
+
+                    console.log(final);
+
+                    group_disease_line = new Morris.Line({
+                        element: 'group-disease-chart',
+                        resize: true,
+                        data: final,
+                        xkey: 'y',
+                        ykeys: diseases,
+                        labels: diseases,
+                        lineWidth: 2,
+                        hideHover: 'auto',
+                        gridTextColor: "#fff",
+                        gridStrokeWidth: 0.4,
+                        pointSize: 4,
+                        pointStrokeColors: ["#efefef"],
+                        gridLineColor: "#efefef",
+                        gridTextFamily: "Open Sans",
+                        gridTextSize: 10
+                    });
+                });
+
+            });
         });
     });
 

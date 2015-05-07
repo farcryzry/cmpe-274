@@ -54,6 +54,13 @@ router.get('/diseases', function (req, res) {
     });
 });
 
+router.get('/groups', function (req, res) {
+    db.all("SELECT name from disease_group order by name",function(err, rows){
+        if(err) console.log(err);
+        else res.json(rows);
+    });
+});
+
 router.get('/count/area/:area*?', function (req, res) {
     var area = req.param('area') || '';
     db.all("select year, week, disease, count from nndss where area = ? group by year, week, disease order by year, week;",
@@ -90,6 +97,29 @@ router.get('/sum/disease/:disease*?', function (req, res) {
         });
 });
 
+router.get('/groups/:group*?', function (req, res) {
+    var disease = req.param('group') || '';
+    db.all("select distinct Disease from nndss where disease like ? order by Disease",
+        [disease ? disease + '%' : disease],
+        function(err, rows){
+            if(err) console.log(err);
+            else res.json({Group: disease, Data: rows.map(function(item){return item.Disease})});
+        });
+});
+
+router.get('/group/:group/:area*?', function (req, res) {
+    var disease = req.param('group') || '';
+    var area = req.param('area') || '';
+    db.all("select Disease, sum(Count) Count from nndss where area = ? and  disease like ? group by Disease",
+        [area, disease ? disease + '%' : disease],
+        function(err, rows){
+            if(err) console.log(err);
+            else res.json({Group: disease, Data: rows});
+        });
+});
+
+
+
 router.get('/count/:disease/:area*?', function (req, res) {
     var disease = req.param('disease') || '';
     var area = req.param('area') || '';
@@ -100,7 +130,5 @@ router.get('/count/:disease/:area*?', function (req, res) {
             else res.json({Area: area, Disease: disease, Data: rows});
         });
 });
-
-
 
 module.exports = router;

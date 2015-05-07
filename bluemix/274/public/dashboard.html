@@ -53,7 +53,7 @@
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="index.html">Home</a></li>
                         <li><a href="#prediction">Prediction</a></li>
-                        <li><a href="#charts">Charts</a></li>
+                        <li><a href="#charts">Visualization</a></li>
                         <li><a href="#ask-watson">Ask Watson</a></li>
                     </ul>
                 </div><!-- /.navbar-collapse -->
@@ -190,7 +190,7 @@
                             </div>
                         </div>
                         <div class="box-footer clearfix">
-                            <button class="pull-right btn btn-primary" id="btn-predict">Predict <i class="fa fa-arrow-circle-right"></i></button>
+                            <button class="pull-right btn btn-info" id="btn-predict">Predict <i class="fa fa-arrow-circle-right"></i></button>
                         </div>
                         <!-- Loading (remove the following to stop the loading)-->
                         <div class="overlay" style="display: none">
@@ -215,85 +215,160 @@
                         </div>
                         <div class="box-body">
 
-                            <form action="#" method="post">
-                                <div class="form-group">
-                                    <select class="form-control" id="area">
-                                        <option value="" selected="SelectState">Select a State/Territory</option>
-                                        <option value="ALABAMA">ALABAMA</option><option value="ALASKA">ALASKA</option><option value="AMER. SAMOA">AMER. SAMOA</option><option value="ARIZONA">ARIZONA</option><option value="ARKANSAS">ARKANSAS</option><option value="C.N.M.I.">C.N.M.I.</option><option value="CALIFORNIA">CALIFORNIA</option><option value="COLORADO">COLORADO</option><option value="CONNECTICUT">CONNECTICUT</option><option value="DELAWARE">DELAWARE</option><option value="DIST. OF COL.">DIST. OF COL.</option><option value="FLORIDA">FLORIDA</option><option value="GEORGIA">GEORGIA</option><option value="GUAM">GUAM</option><option value="HAWAII">HAWAII</option><option value="IDAHO">IDAHO</option><option value="ILLINOIS">ILLINOIS</option><option value="INDIANA">INDIANA</option><option value="IOWA">IOWA</option><option value="KANSAS">KANSAS</option><option value="KENTUCKY">KENTUCKY</option><option value="LOUISIANA">LOUISIANA</option><option value="MAINE">MAINE</option><option value="MARYLAND">MARYLAND</option><option value="MASSACHUSETTS">MASSACHUSETTS</option><option value="MICHIGAN">MICHIGAN</option><option value="MINNESOTA">MINNESOTA</option><option value="MISSISSIPPI">MISSISSIPPI</option><option value="MISSOURI">MISSOURI</option><option value="MONTANA">MONTANA</option><option value="MOUNTAIN">MOUNTAIN</option><option value="NEBRASKA">NEBRASKA</option><option value="NEVADA">NEVADA</option><option value="NEW ENGLAND">NEW ENGLAND</option><option value="NEW HAMPSHIRE">NEW HAMPSHIRE</option><option value="NEW JERSEY">NEW JERSEY</option><option value="NEW MEXICO">NEW MEXICO</option><option value="NEW YORK">NEW YORK</option><option value="NEW YORK CITY">NEW YORK CITY</option><option value="NORTH CAROLINA">NORTH CAROLINA</option><option value="NORTH DAKOTA">NORTH DAKOTA</option><option value="OHIO">OHIO</option><option value="OKLAHOMA">OKLAHOMA</option><option value="OREGON">OREGON</option><option value="PACIFIC">PACIFIC</option><option value="PENNSYLVANIA">PENNSYLVANIA</option><option value="PUERTO RICO">PUERTO RICO</option><option value="RHODE ISLAND">RHODE ISLAND</option><option value="SOUTH CAROLINA">SOUTH CAROLINA</option><option value="SOUTH DAKOTA">SOUTH DAKOTA</option><option value="TENNESSEE">TENNESSEE</option><option value="TEXAS">TEXAS</option><option value="UNITED STATES">UNITED STATES</option><option value="UTAH">UTAH</option><option value="VERMONT">VERMONT</option><option value="VIRGIN ISL.">VIRGIN ISL.</option><option value="VIRGINIA">VIRGINIA</option><option value="WASHINGTON">WASHINGTON</option><option value="WEST VIRGINIA">WEST VIRGINIA</option><option value="WISCONSIN">WISCONSIN</option><option value="WYOMING">WYOMING</option></select>
-                                </div>
-                                <div class="form-group">
-                                    <select class="form-control" id="disease">
-                                        <option value="" selected="selected">Select a Disease</option>
-                                        <option value="Babesiosis">Babesiosis</option><option value="Campylobacteriosis">Campylobacteriosis</option><option value="Chlamydia trachomatis infection">Chlamydia trachomatis infection</option><option value="Coccidioidomycosis">Coccidioidomycosis</option><option value="Cryptosporidiosis">Cryptosporidiosis</option><option value="Dengue Fever†">Dengue Fever†</option><option value="Dengue Hemorrhagic Fever§">Dengue Hemorrhagic Fever§</option><option value="Dengue Severe">Dengue Severe</option><option value="Dengue§">Dengue§</option><option value="Ehrlichiosis/Anaplasmosis§, Anaplasma phagocytophilum">Ehrlichiosis/Anaplasmosis§, Anaplasma phagocytophilum</option><option value="Ehrlichiosis/Anaplasmosis§, Ehrlichia chaffeensis">Ehrlichiosis/Anaplasmosis§, Ehrlichia chaffeensis</option><option value="Ehrlichiosis/Anaplasmosis§, Undetermined">Ehrlichiosis/Anaplasmosis§, Undetermined</option><option value="Ehrlichiosis/Anaplasmosis†, Anaplasma phagocytophilum">Ehrlichiosis/Anaplasmosis†, Anaplasma phagocytophilum</option><option value="Ehrlichiosis/Anaplasmosis†, Ehrlichia chaffeensis">Ehrlichiosis/Anaplasmosis†, Ehrlichia chaffeensis</option><option value="Ehrlichiosis/Anaplasmosis†, Undetermined">Ehrlichiosis/Anaplasmosis†, Undetermined</option><option value="Giardiasis">Giardiasis</option><option value="Gonorrhea">Gonorrhea</option><option value="Haemophilus influenzae, invasive§, All ages, all serotypes">Haemophilus influenzae, invasive§, All ages, all serotypes</option><option value="Haemophilus influenzae, invasive†, All ages, all serotypes">Haemophilus influenzae, invasive†, All ages, all serotypes</option><option value="Hepatitis (viral, acute), type A">Hepatitis (viral, acute), type A</option><option value="Hepatitis (viral, acute), type B">Hepatitis (viral, acute), type B</option><option value="Hepatitis (viral, acute), type C">Hepatitis (viral, acute), type C</option><option value="Invasive Pneumococcal disease, Age LT 5">Invasive Pneumococcal disease, Age LT 5</option><option value="Invasive Pneumococcal disease, All ages">Invasive Pneumococcal disease, All ages</option><option value="Invasive Pneumococcal disease§, Age LT 5">Invasive Pneumococcal disease§, Age LT 5</option><option value="Invasive Pneumococcal disease§, All ages">Invasive Pneumococcal disease§, All ages</option><option value="Legionellosis">Legionellosis</option><option value="Lyme disease">Lyme disease</option><option value="Malaria">Malaria</option><option value="Meningococcal disease, invasive§, All serogroups">Meningococcal disease, invasive§, All serogroups</option><option value="Meningococcal disease, invasive†, All serogroups">Meningococcal disease, invasive†, All serogroups</option><option value="Mumps">Mumps</option><option value="Pertussis">Pertussis</option><option value="Rabies, animal">Rabies, animal</option><option value="Rubella">Rubella</option><option value="Rubella, congenital syndrome">Rubella, congenital syndrome</option><option value="Salmonellosis">Salmonellosis</option><option value="Shiga toxin-producing E. coli (STEC)§">Shiga toxin-producing E. coli (STEC)§</option><option value="Shiga toxin-producing E. coli (STEC)†">Shiga toxin-producing E. coli (STEC)†</option><option value="Shigellosis">Shigellosis</option><option value="Spotted Fever Rickettsiosis (including RMSF)§, Confirmed">Spotted Fever Rickettsiosis (including RMSF)§, Confirmed</option><option value="Spotted Fever Rickettsiosis (including RMSF)§, Probable">Spotted Fever Rickettsiosis (including RMSF)§, Probable</option><option value="Spotted Fever Rickettsiosis (including RMSF)†, Confirmed">Spotted Fever Rickettsiosis (including RMSF)†, Confirmed</option><option value="Spotted Fever Rickettsiosis (including RMSF)†, Probable">Spotted Fever Rickettsiosis (including RMSF)†, Probable</option><option value="Syphilis, primary and secondary">Syphilis, primary and secondary</option><option value="Tetanus">Tetanus</option><option value="Varicella (chickenpox)">Varicella (chickenpox)</option><option value="Vibriosis§">Vibriosis§</option><option value="West Nile virus disease§, Neuroinvasive">West Nile virus disease§, Neuroinvasive</option><option value="West Nile virus disease§, Nonneuroinvasiveś">West Nile virus disease§, Nonneuroinvasiveś</option><option value="West Nile virus disease†, Neuroinvasive">West Nile virus disease†, Neuroinvasive</option><option value="West Nile virus disease†, Nonneuroinvasive§">West Nile virus disease†, Nonneuroinvasive§</option></select>
-                                </div>
-                                <div class="form-group clearfix">
-                                    <button class="pull-right btn btn-warning" id="btn-view">View <i class="fa fa-arrow-circle-right"></i></button>
-                                </div>
-                            </form>
-
+                            <!-- Main row -->
                             <div class="row">
-                                <div class="col-lg-6 col-xs-6">
-                                    <!-- Map box -->
-                                    <div class="box box-solid bg-light-blue-gradient">
-                                        <div class="box-header">
-                                            <!-- tools box -->
+                                <!-- Left col -->
+                                <div class="col-lg-12 col-xs-12">
+                                    <div class="box box-success">
+                                        <div class="box-header with-border">
+                                            <i class="fa fa-inbox"></i>
+                                            <h3 class="box-title">Visualization 1</h3>
                                             <div class="pull-right box-tools">
-                                                <button class="btn btn-primary btn-sm pull-right" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
-                                            </div><!-- /. tools -->
-
-                                            <i class="fa fa-map-marker"></i>
-                                            <h3 class="box-title">
-                                                Geography Distribution
-                                            </h3>
+                                                <button class="btn btn-success btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="" style="margin-right: 5px;" data-original-title="collapse/expend"><i class="fa fa-minus"></i></button>
+                                            </div>
                                         </div>
                                         <div class="box-body">
-                                            <div id="us-map" style="height: 300px; width: 100%;"></div>
-                                        </div><!-- /.box-body-->
-                                    </div>
-                                    <!-- /.box -->
-                                </div>
-                                <div class="col-lg-6 col-xs-6">
-                                    <!-- Donut box -->
-                                    <div class="box box-solid bg-light-blue-gradient">
-                                        <div class="box-header">
-                                            <!-- tools box -->
-                                            <div class="pull-right box-tools">
-                                                <button class="btn btn-primary btn-sm pull-right" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
-                                            </div><!-- /. tools -->
 
-                                            <h3 class="box-title">
-                                                Donut
-                                            </h3>
+                                            <form action="#" method="post">
+                                                <div class="form-group" style="display: none">
+                                                    <select class="form-control" id="area1">
+                                                        <option value="" selected="SelectState">Select a State/Territory</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <select class="form-control" id="disease">
+                                                        <option value="" selected="selected">Select a Disease</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group clearfix">
+                                                    <button class="pull-right btn btn-success" id="btn-view">View <i class="fa fa-arrow-circle-right"></i></button>
+                                                </div>
+                                            </form>
+
+                                            <div class="row">
+                                                <div class="col-lg-12 col-xs-12">
+                                                    <!-- Map box -->
+                                                    <div class="box box-solid bg-light-blue-gradient">
+                                                        <div class="box-header">
+                                                            <!-- tools box -->
+                                                            <div class="pull-right box-tools">
+                                                                <button class="btn btn-primary btn-sm pull-right" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+                                                            </div><!-- /. tools -->
+
+                                                            <i class="fa fa-map-marker"></i>
+                                                            <h3 class="box-title">
+                                                                Geography Distribution
+                                                            </h3>
+                                                        </div>
+                                                        <div class="box-body">
+                                                            <div id="us-map" style="height: 300px; width: 100%;"></div>
+                                                        </div><!-- /.box-body-->
+                                                    </div>
+                                                    <!-- /.box -->
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                            </div>
+
+                                            <!-- Lines box -->
+                                            <div class="box box-solid bg-light-blue-gradient">
+                                                <div class="box-header">
+                                                    <!-- tools box -->
+                                                    <div class="pull-right box-tools">
+                                                        <button class="btn btn-primary btn-sm pull-right" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+                                                    </div><!-- /. tools -->
+
+                                                    <h3 class="box-title">
+                                                        Lines
+                                                    </h3>
+                                                </div>
+                                                <div class="box-body">
+                                                    <div class="chart tab-pane active" id="multi-disease-chart" style="position: relative; height: 300px;"></div>
+                                                </div><!-- /.box-body-->
+                                            </div>
+                                            <!-- /.box -->
+                                        </div><!-- /.box-body -->
+                                    </div>
+
+                                </div><!-- /.Left col -->
+                            </div><!-- /.row (main row) -->
+
+                            <!-- Main row -->
+                            <div class="row">
+                                <!-- Left col -->
+                                <div class="col-lg-12 col-xs-12">
+                                    <div class="box box-primary">
+                                        <div class="box-header with-border">
+                                            <i class="fa fa-inbox"></i>
+                                            <h3 class="box-title">Visualization 2</h3>
+                                            <div class="pull-right box-tools">
+                                                <button class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="" style="margin-right: 5px;" data-original-title="collapse/expend"><i class="fa fa-minus"></i></button>
+                                            </div>
                                         </div>
                                         <div class="box-body">
-                                            <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;"></div>
-                                        </div><!-- /.box-body-->
+
+                                            <form action="#" method="post">
+                                                <div class="form-group">
+                                                    <select class="form-control" id="area2">
+                                                        <option value="" selected="SelectState">Select a State/Territory</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <select class="form-control" id="disease_groups">
+                                                        <option value="" selected="selected">Select a Disease Group</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group clearfix">
+                                                    <button class="pull-right btn btn-primary" id="btn-view2">View <i class="fa fa-arrow-circle-right"></i></button>
+                                                </div>
+                                            </form>
+
+                                            <div class="row">
+                                                <div class="col-lg-12 col-xs-12">
+                                                    <!-- Donut box -->
+                                                    <div class="box box-solid bg-light-blue-gradient">
+                                                        <div class="box-header">
+                                                            <!-- tools box -->
+                                                            <div class="pull-right box-tools">
+                                                                <button class="btn btn-primary btn-sm pull-right" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+                                                            </div><!-- /. tools -->
+
+                                                            <h3 class="box-title">
+                                                                Donut
+                                                            </h3>
+                                                        </div>
+                                                        <div class="box-body">
+                                                            <div class="chart tab-pane" id="group-donut-chart" style="position: relative; height: 300px;display: none"></div>
+                                                        </div><!-- /.box-body-->
+                                                    </div>
+                                                    <!-- /.box -->
+                                                </div>
+                                            </div>
+
+                                            <!-- Lines box -->
+                                            <div class="box box-solid bg-light-blue-gradient">
+                                                <div class="box-header">
+                                                    <!-- tools box -->
+                                                    <div class="pull-right box-tools">
+                                                        <button class="btn btn-primary btn-sm pull-right" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+                                                    </div><!-- /. tools -->
+
+                                                    <h3 class="box-title">
+                                                        Lines
+                                                    </h3>
+                                                </div>
+                                                <div class="box-body">
+                                                    <div class="chart tab-pane active" id="group-disease-chart" style="position: relative; height: 300px; display: none"></div>
+                                                </div><!-- /.box-body-->
+                                            </div>
+                                            <!-- /.box -->
+                                        </div><!-- /.box-body -->
                                     </div>
-                                    <!-- /.box -->
-                                </div>
-                            </div>
 
-                            <div class="row">
-
-                            </div>
-
-                            <!-- Lines box -->
-                            <div class="box box-solid bg-light-blue-gradient">
-                                <div class="box-header">
-                                    <!-- tools box -->
-                                    <div class="pull-right box-tools">
-                                        <button class="btn btn-primary btn-sm pull-right" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
-                                    </div><!-- /. tools -->
-
-                                    <h3 class="box-title">
-                                        Lines
-                                    </h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="chart tab-pane active" id="multi-disease-chart" style="position: relative; height: 300px;"></div>
-                                </div><!-- /.box-body-->
-                            </div>
-                            <!-- /.box -->
+                                </div><!-- /.Left col -->
+                            </div><!-- /.row (main row) -->
                         </div><!-- /.box-body -->
                     </div>
 
