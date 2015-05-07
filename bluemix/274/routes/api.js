@@ -80,6 +80,16 @@ router.get('/count/disease/:disease*?', function (req, res) {
         });
 });
 
+router.get('/sum/disease/:disease*?', function (req, res) {
+    var disease = req.param('disease') || '';
+    db.all("select area, sum(count) as Sum from nndss where disease = ? group by area order by area;",
+        [disease],
+        function(err, rows){
+            if(err) console.log(err);
+            else res.json({Disease: disease, Data: rows});
+        });
+});
+
 router.get('/count/:disease/:area*?', function (req, res) {
     var disease = req.param('disease') || '';
     var area = req.param('area') || '';
