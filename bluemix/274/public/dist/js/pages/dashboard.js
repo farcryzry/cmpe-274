@@ -83,43 +83,6 @@ $(function () {
     /* jQueryKnob */
     $(".knob").knob();
 
-
-    $.get('api/sum/disease/Giardiasis', function(result) {
-        var data = {};
-
-        result.Data.forEach(function(area) {
-            data[area.Area] = area.Sum;
-        });
-
-        console.log(data);
-
-        //World map by jvectormap
-        $('#us-map').vectorMap({
-            map: 'us_mill_en',
-            backgroundColor: "transparent",
-            regionStyle: {
-                initial: {
-                    fill: '#e4e4e4',
-                    "fill-opacity": 1,
-                    stroke: 'none',
-                    "stroke-width": 0,
-                    "stroke-opacity": 1
-                }
-            },
-            series: {
-                regions: [{
-                    values: data,
-                    scale: ["#92c1dc", "#ebf4f9"],
-                    normalizeFunction: 'polynomial'
-                }]
-            },
-            onRegionLabelShow: function (e, el, code) {
-                if (typeof data[code] != "undefined")
-                    el.html(el.html() + ': ' + data[code] + ' new visitors');
-            }
-        });
-    });
-
     //jvectormap data
     var visitorsData = {
         "US": 398, //USA
@@ -396,6 +359,7 @@ $(function () {
         });
     });
 
+    var map = null;
 
 
     $('#btn-view').click(function(e) {
@@ -406,6 +370,52 @@ $(function () {
             alert('Please select Disease first!');
             return;
         }
+
+        $('#us-map').show('slow', function() {
+            $.get('api/sum/disease/' + disease, function (result) {
+                var markers = result.Data.map(function (area) {
+                    return {latLng: [area.Latitude, area.Longitude], name: area.Area};
+                });
+
+                var data = {};
+
+                result.Data.forEach(function(area){
+                    data['US-' + area.State] = area.Count;
+                });
+
+                console.log(data);
+
+
+
+                if(map) $('#us-map').replaceWith('<div id="us-map" style="height: 300px; width: 100%"></div>');
+                map = $('#us-map').vectorMap({
+                    map: 'us_mill_en',
+                    backgroundColor: "transparent",
+                    regionStyle: {
+                        initial: {
+                            fill: '#e4e4e4',
+                            "fill-opacity": 1,
+                            stroke: 'none',
+                            "stroke-width": 0,
+                            "stroke-opacity": 1
+                        }
+                    },
+                    series: {
+                        regions: [{
+                            values: data,
+                            scale: ["#ebf4f9", "#92c1dc"],
+                            normalizeFunction: 'polynomial'
+                        }]
+                    },
+                    onRegionLabelShow: function (e, el, code) {
+                        el.html(el.html() + ', Count: ' + data[code]);
+                    }
+                });
+
+
+            });
+        });
+
     });
 
 

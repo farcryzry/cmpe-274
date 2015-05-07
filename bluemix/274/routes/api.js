@@ -89,7 +89,8 @@ router.get('/count/disease/:disease*?', function (req, res) {
 
 router.get('/sum/disease/:disease*?', function (req, res) {
     var disease = req.param('disease') || '';
-    db.all("select area, sum(count) as Sum from nndss where disease = ? group by area order by area;",
+    //db.all("select area, sum(count) as Sum from nndss where disease = ? group by area order by area;",
+    db.all("select nndss.area Area, state.abbreviation State, nndss.Latitude, nndss.Longitude, sum(Count) Count from nndss inner join state on nndss.Area = state.name where nndss.disease = ? group by nndss.Area;",
         [disease],
         function(err, rows){
             if(err) console.log(err);
@@ -117,8 +118,6 @@ router.get('/group/:group/:area*?', function (req, res) {
             else res.json({Group: disease, Data: rows});
         });
 });
-
-
 
 router.get('/count/:disease/:area*?', function (req, res) {
     var disease = req.param('disease') || '';
