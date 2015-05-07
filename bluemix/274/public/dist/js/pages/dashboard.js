@@ -186,29 +186,29 @@ $(function () {
 
 
     /* BOX REFRESH PLUGIN EXAMPLE (usage with morris charts) */
-    $("#loading-example").boxRefresh({
-        source: "ajax/dashboard-boxrefresh-demo.php",
-        onLoadDone: function (box) {
-            var bar = new Morris.Bar({
-                element: 'bar-chart',
-                resize: true,
-                data: [
-                    {y: '2006', a: 100, b: 90},
-                    {y: '2007', a: 75, b: 65},
-                    {y: '2008', a: 50, b: 40},
-                    {y: '2009', a: 75, b: 65},
-                    {y: '2010', a: 50, b: 40},
-                    {y: '2011', a: 75, b: 65},
-                    {y: '2012', a: 100, b: 90}
-                ],
-                barColors: ['#00a65a', '#f56954'],
-                xkey: 'y',
-                ykeys: ['a', 'b'],
-                labels: ['CPU', 'DISK'],
-                hideHover: 'auto'
-            });
-        }
-    });
+    //$("#loading-example").boxRefresh({
+    //    source: "ajax/dashboard-boxrefresh-demo.php",
+    //    onLoadDone: function (box) {
+    //        var bar = new Morris.Bar({
+    //            element: 'bar-chart',
+    //            resize: true,
+    //            data: [
+    //                {y: '2006', a: 100, b: 90},
+    //                {y: '2007', a: 75, b: 65},
+    //                {y: '2008', a: 50, b: 40},
+    //                {y: '2009', a: 75, b: 65},
+    //                {y: '2010', a: 50, b: 40},
+    //                {y: '2011', a: 75, b: 65},
+    //                {y: '2012', a: 100, b: 90}
+    //            ],
+    //            barColors: ['#00a65a', '#f56954'],
+    //            xkey: 'y',
+    //            ykeys: ['a', 'b'],
+    //            labels: ['CPU', 'DISK'],
+    //            hideHover: 'auto'
+    //        });
+    //    }
+    //});
 
     /* The todo list plugin */
     $(".todo-list").todolist({
@@ -356,10 +356,76 @@ $(function () {
             $('#predictionInfo2 .info-box-number').text('N/A');
         }).always(function(){
             $('#prediction .overlay').hide();
+            var predictions = '[2,2]';
+            $('#disease-chart').show('slow', function() {
+                $.get('/api/count/' + disease + '/' + area, function (result) {
+                    console.log(result);
+                    if (result && result.Data) {
+
+
+                        var futures = JSON.parse(predictions) || [];
+                        console.log(futures);
+
+                        var maxPeriod = _.max(result.Data, function (item) {
+                            return item.Year * 100 + item.Week;
+                        });
+
+                        console.log(maxPeriod);
+
+                        var getNextPeriod = function (currentPeriod, count) {
+                            if (currentPeriod.Year == 2014 && currentPeriod.Week == 53) {
+                                return {Year: currentPeriod.Year + 1, Week: 1, Future: count};
+                            } else {
+                                return {Year: currentPeriod.Year, Week: currentPeriod.Week + 1, Future: count};
+                            }
+                        };
+
+                        if (futures[0]) {
+                            var nextPeriod = getNextPeriod(maxPeriod);
+                            $('#predictionInfo1 .info-box-text').text(nextPeriod.Year + ' Week ' + nextPeriod.Week);
+                            $('#predictionInfo1 .info-box-number').text(futures[0]);
+                        }
+
+                        futures.forEach(function (count) {
+                            var nextPeriod = getNextPeriod(maxPeriod, count);
+                            result.Data.push(nextPeriod);
+                            maxPeriod = nextPeriod;
+                        });
+
+                        if (futures[1]) {
+                            $('#predictionInfo2 .info-box-text').text(maxPeriod.Year + ' Week ' + maxPeriod.Week);
+                            $('#predictionInfo2 .info-box-number').text(futures[1]);
+                        }
+
+                        areaDiseaseLine.setData(result.Data.map(function (item) {
+                            var o = {y: item.Year + ' W' + item.Week};
+                            if (item.Count) {
+                                o.historical = item.Count;
+                            }
+                            if (item.Future) {
+                                o.future = item.Future;
+                            }
+                            return o;
+                        }));
+                    }
+                });
+            });
         });
     });
 
     var map = null;
+
+    var bar = new Morris.Bar({
+        element: 'bar-chart',
+        resize: true,
+        data: [],
+        barColors: ['#00a65a'],
+        xkey: 'y',
+        ykeys: ['count'],
+        labels: ['Count'],
+        hideHover: 'auto',
+        stacked: true
+    });
 
 
     $('#btn-view').click(function(e) {
@@ -384,8 +450,6 @@ $(function () {
                 });
 
                 console.log(data);
-
-
 
                 if(map) $('#us-map').replaceWith('<div id="us-map" style="height: 300px; width: 100%"></div>');
                 map = $('#us-map').vectorMap({
@@ -412,6 +476,15 @@ $(function () {
                     }
                 });
 
+                var data_bar = result.Data.map(function(area){
+                    return {y: area.Area, count: area.Count};
+                });
+
+                console.log(data_bar);
+
+                $('#bar-chart').show('slow', function() {
+                    bar.setData(data_bar);
+                });
 
             });
         });
@@ -440,23 +513,7 @@ $(function () {
 
     });
 
-    var group_disease_line = new Morris.Line({
-        element: 'group-disease-chart',
-        resize: true,
-        data: [],
-        xkey: 'y',
-        ykeys: [],
-        labels: [],
-        lineWidth: 2,
-        hideHover: 'auto',
-        gridTextColor: "#fff",
-        gridStrokeWidth: 0.4,
-        pointSize: 4,
-        pointStrokeColors: ["#efefef"],
-        gridLineColor: "#efefef",
-        gridTextFamily: "Open Sans",
-        gridTextSize: 10
-    });
+    var group_disease_line = null;
 
 
     $('#btn-view2').click(function(e) {
@@ -520,6 +577,8 @@ $(function () {
                     });
 
                     console.log(final);
+
+                    if(group_disease_line) $('#group-disease-chart').replaceWith('<div class="chart tab-pane active" id="group-disease-chart" style="position: relative; height: 300px"></div>');
 
                     group_disease_line = new Morris.Line({
                         element: 'group-disease-chart',
