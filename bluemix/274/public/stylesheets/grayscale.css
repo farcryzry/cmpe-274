@@ -135,8 +135,8 @@ a:focus {
 
     .navbar-custom.top-nav-collapse {
         padding: 0;
-        border-bottom: 1px solid rgba(255,255,255,.3);
-        background: #000;
+        //border-bottom: 1px solid rgba(255,255,255,.3);
+        background: transparent;
     }
 }
 
@@ -265,7 +265,7 @@ a:focus {
     width: 100%;
     padding: 50px 0;
     color: #FFFFFF ;
-    background: url() no-repeat center center scroll;
+    //background: url() no-repeat center center scroll;
     background-color: #3399FF ;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -312,10 +312,10 @@ a:focus {
 
 .btn-default:hover,
 .btn-default:focus {
-    border: 1px solid #42dca3;
+    //border: 1px solid #42dca3;
     outline: 0;
-    color: #000;
-    background-color: #000000;
+    color: rgba(255,255,255,.3);
+    background-color: rgba(255,255,255,.3);
 }
 
 ul.banner-social-buttons {
