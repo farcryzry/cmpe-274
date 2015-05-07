@@ -292,6 +292,12 @@ $(function () {
         $.get('http://127.0.0.1:5000/' + area + '/' + disease, function(predictions) {
             $('#prediction .overlay').hide();
 
+
+            $('#predictionInfo1 .info-box-text').text('');
+            $('#predictionInfo1 .info-box-number').text('N/A');
+            $('#predictionInfo2 .info-box-text').text('');
+            $('#predictionInfo2 .info-box-number').text('N/A');
+
             $('#disease-chart').show('slow', function() {
                 $.get('/api/count/'+disease+'/'+area, function(result){
                     console.log(result);
@@ -315,7 +321,7 @@ $(function () {
                             }
                         };
 
-                        if(futures[0]) {
+                        if(futures[0] || futures[0] === 0) {
                             var nextPeriod = getNextPeriod(maxPeriod);
                             $('#predictionInfo1 .info-box-text').text(nextPeriod.Year + ' Week ' + nextPeriod.Week);
                             $('#predictionInfo1 .info-box-number').text(futures[0]);
@@ -327,7 +333,7 @@ $(function () {
                             maxPeriod = nextPeriod;
                         });
 
-                        if(futures[1]) {
+                        if(futures[1] || futures[1] === 0) {
                             $('#predictionInfo2 .info-box-text').text(maxPeriod.Year + ' Week ' + maxPeriod.Week);
                             $('#predictionInfo2 .info-box-number').text(futures[1]);
                         }
@@ -350,66 +356,8 @@ $(function () {
         }).fail(function() {
             $('#disease-chart').hide();
             areaDiseaseLine.setData([]);
-            $('#predictionInfo1 .info-box-text').text('');
-            $('#predictionInfo1 .info-box-number').text('N/A');
-            $('#predictionInfo2 .info-box-text').text('');
-            $('#predictionInfo2 .info-box-number').text('N/A');
         }).always(function(){
             $('#prediction .overlay').hide();
-            var predictions = '[2,2]';
-            $('#disease-chart').show('slow', function() {
-                $.get('/api/count/' + disease + '/' + area, function (result) {
-                    console.log(result);
-                    if (result && result.Data) {
-
-
-                        var futures = JSON.parse(predictions) || [];
-                        console.log(futures);
-
-                        var maxPeriod = _.max(result.Data, function (item) {
-                            return item.Year * 100 + item.Week;
-                        });
-
-                        console.log(maxPeriod);
-
-                        var getNextPeriod = function (currentPeriod, count) {
-                            if (currentPeriod.Year == 2014 && currentPeriod.Week == 53) {
-                                return {Year: currentPeriod.Year + 1, Week: 1, Future: count};
-                            } else {
-                                return {Year: currentPeriod.Year, Week: currentPeriod.Week + 1, Future: count};
-                            }
-                        };
-
-                        if (futures[0]) {
-                            var nextPeriod = getNextPeriod(maxPeriod);
-                            $('#predictionInfo1 .info-box-text').text(nextPeriod.Year + ' Week ' + nextPeriod.Week);
-                            $('#predictionInfo1 .info-box-number').text(futures[0]);
-                        }
-
-                        futures.forEach(function (count) {
-                            var nextPeriod = getNextPeriod(maxPeriod, count);
-                            result.Data.push(nextPeriod);
-                            maxPeriod = nextPeriod;
-                        });
-
-                        if (futures[1]) {
-                            $('#predictionInfo2 .info-box-text').text(maxPeriod.Year + ' Week ' + maxPeriod.Week);
-                            $('#predictionInfo2 .info-box-number').text(futures[1]);
-                        }
-
-                        areaDiseaseLine.setData(result.Data.map(function (item) {
-                            var o = {y: item.Year + ' W' + item.Week};
-                            if (item.Count) {
-                                o.historical = item.Count;
-                            }
-                            if (item.Future) {
-                                o.future = item.Future;
-                            }
-                            return o;
-                        }));
-                    }
-                });
-            });
         });
     });
 

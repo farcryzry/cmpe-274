@@ -22,8 +22,14 @@ def say_hello_text(username = "World",text="You are good"):
     print data_list_new.__len__()
     data_list=data_list_new
     ds = SequentialDataSet(1,1)
+    isZero=0;
     for sample,next_sample in zip(data_list,cycle(data_list[1:])):
         ds.addSample(sample, next_sample)
+        if sample:
+            isZero=1
+
+    if(isZero==0):
+        return '[0, 0]'
 
     net = buildNetwork(1,5,1,hiddenclass=LSTMLayer,outputbias=False,recurrent=True)
     trainer = RPropMinusTrainer(net, dataset=ds)
@@ -40,8 +46,10 @@ def say_hello_text(username = "World",text="You are good"):
 #        print("final error =", train_errors[-1])
 #    print "Value for last week is %4.1d" % abs(data_list[-1])
 #    print "Value for next week is %4.1d" % abs(net.activate(data_list[-1]))
-    result = (abs(data_list[-1]))
-    return '[%d, %d]' % (result,result)
+#    result = (abs(data_list[-1]))
+    result = (abs(net.activate(data_list[-1])))
+    result_1 = (abs(net.activate(result)))
+    return '[%d, %d]' % (result,result_1)
 
 header_json ='''{Count:'''
     
